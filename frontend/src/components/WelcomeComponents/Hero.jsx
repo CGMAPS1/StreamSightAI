@@ -192,7 +192,7 @@ const Hero = () => {
 
           {/* The text content is now on the right */}
           <div className="text-center lg:text-left">
-            <h1 className="text-[1.8rem] lg:text-5xl xl:text-6xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tighter">
+            <h1 className="text-[1.7rem] lg:text-5xl xl:text-6xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tighter">
               <Typewriter
                 options={{
                   strings: [
