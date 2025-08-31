@@ -6,6 +6,7 @@ import Features from './pages/Welcome/Features'
 import Chat from './pages/Chatbot/Chat'
 import PageNotFound from './pages/Welcome/PageNotFound'
 import MainLayout from './components/layout/MainLayout'
+import AboutTeam from './pages/InteractivePages/AboutTeam'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/" element={<Welcome />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/about-team" element={<AboutTeam />} />
 
           {/* <Route path="/about" element={<AboutUs />} /> */}
             <Route path="/features" element={<Features />} />

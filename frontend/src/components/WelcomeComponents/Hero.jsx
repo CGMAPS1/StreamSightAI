@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, useInView } from "framer-motion";
 import Typewriter from "typewriter-effect";
 
 // A component to generate the raining lines effect.
@@ -160,6 +161,13 @@ const AiVisionGraphic = () => (
 // The main Hero component for the application, now with a new layout.
 const Hero = () => {
   const navigate = useNavigate();
+  const heroRef = useRef(null);
+  const graphicRef = useRef(null);
+  const textRef = useRef(null);
+  
+  const isHeroInView = useInView(heroRef, { once: true, threshold: 0.1 });
+  const isGraphicInView = useInView(graphicRef, { once: true, threshold: 0.1 });
+  const isTextInView = useInView(textRef, { once: true, threshold: 0.1 });
   
   const handleViewDemo = () => {
     navigate("/demo");
@@ -172,13 +180,114 @@ const Hero = () => {
     navigate("/chat");
   };
 
+  // Floating particles in background
+  const floatingParticles = Array.from({ length: 15 }, (_, i) => (
+    <motion.div
+      key={i}
+      className="absolute w-2 h-2 bg-gradient-to-r from-indigo-400/20 to-cyan-400/20 rounded-full"
+      initial={{
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+        y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+        scale: Math.random() * 0.5 + 0.5,
+      }}
+      animate={{
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+        y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+        scale: [0.5, 1.5, 0.5],
+        opacity: [0.2, 0.8, 0.2],
+      }}
+      transition={{
+        duration: Math.random() * 15 + 10,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  ));
+
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-16 lg:pt-24">
-      {/* Animated gradient background, more subtle */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_100%_200px,#d1d5db,transparent)] opacity-40"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_0%_80%,#c7d2fe,transparent)] opacity-50"></div>
+    <motion.section 
+      ref={heroRef}
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-16 lg:pt-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      {/* Enhanced animated gradient background */}
+      <motion.div 
+        className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
+        animate={{
+          backgroundPosition: ['0% 0%', '100% 100%', '0% 0%']
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      >
+        <motion.div 
+          className="absolute inset-0 bg-[radial-gradient(circle_800px_at_100%_200px,#d1d5db,transparent)] opacity-40"
+          animate={{
+            background: [
+              "radial-gradient(circle_800px_at_100%_200px,#d1d5db,transparent)",
+              "radial-gradient(circle_800px_at_0%_200px,#d1d5db,transparent)",
+              "radial-gradient(circle_800px_at_100%_200px,#d1d5db,transparent)"
+            ]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute inset-0 bg-[radial-gradient(circle_800px_at_0%_80%,#c7d2fe,transparent)] opacity-50"
+          animate={{
+            background: [
+              "radial-gradient(circle_800px_at_0%_80%,#c7d2fe,transparent)",
+              "radial-gradient(circle_800px_at_100%_80%,#c7d2fe,transparent)",
+              "radial-gradient(circle_800px_at_0%_80%,#c7d2fe,transparent)"
+            ]
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {floatingParticles}
       </div>
+
+      {/* Additional glowing orbs */}
+      <motion.div
+        className="absolute top-20 left-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"
+        animate={{
+          x: [0, 100, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl"
+        animate={{
+          x: [0, -80, 0],
+          y: [0, 30, 0],
+          scale: [1, 0.8, 1],
+        }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
 
       {/* ✨ ADDED: Raining Lines Effect Component ✨ */}
       <RainEffect />
@@ -186,13 +295,50 @@ const Hero = () => {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 items-center gap-x-12 gap-y-16">
           {/* The new visual graphic is now on the left */}
-          <div className="flex justify-center">
+          <motion.div 
+            ref={graphicRef}
+            className="flex justify-center"
+            initial={{ opacity: 0, x: -100, rotateY: -30 }}
+            animate={isGraphicInView ? { 
+              opacity: 1, 
+              x: 0, 
+              rotateY: 0 
+            } : {}}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.25, 0.46, 0.45, 0.94],
+              delay: 0.3 
+            }}
+            whileHover={{ 
+              scale: 1.05, 
+              rotateY: 5,
+              transition: { duration: 0.3 }
+            }}
+          >
             <AiVisionGraphic />
-          </div>
+          </motion.div>
 
           {/* The text content is now on the right */}
-          <div className="text-center lg:text-left">
-            <h1 className="text-[1.7rem] lg:text-5xl xl:text-6xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tighter">
+          <motion.div 
+            ref={textRef}
+            className="text-center lg:text-left"
+            initial={{ opacity: 0, x: 100 }}
+            animate={isTextInView ? { 
+              opacity: 1, 
+              x: 0 
+            } : {}}
+            transition={{ 
+              duration: 1, 
+              ease: [0.25, 0.46, 0.45, 0.94],
+              delay: 0.5 
+            }}
+          >
+            <motion.h1 
+              className="text-[1.7rem] lg:text-5xl xl:text-6xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tighter"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isTextInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.7 }}
+            >
               <Typewriter
                 options={{
                   strings: [
@@ -207,28 +353,68 @@ const Hero = () => {
                   deleteSpeed: 50,
                 }}
               />
-              <span className="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-sky-500">
+              <motion.span 
+                className="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-sky-500"
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                style={{
+                  backgroundSize: '200% 200%'
+                }}
+              >
                 With StreamSight AI.
-              </span>
-            </h1>
-            <p className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0">
+              </motion.span>
+            </motion.h1>
+
+            <motion.p 
+              className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isTextInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.9 }}
+            >
               StreamSight AI is an advanced agentic assistant that deciphers
               complex video streams. It identifies key events, summarizes
               content, and enables multi-turn conversations to unlock critical
               insights from visual data.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              {/* <button
+            </motion.p>
+
+            <motion.div 
+              className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isTextInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 1.1 }}
+            >
+              {/* <motion.button
                 type="button"
                 onClick={handleStart}
                 className="group w-full sm:w-auto flex items-center justify-center px-7 py-3.5 text-base font-bold text-white bg-gradient-to-r from-indigo-600 to-blue-500 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                whileHover={{ 
+                  scale: 1.05,
+                  y: -2,
+                  boxShadow: "0 20px 40px rgba(99, 102, 241, 0.3)"
+                }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1.3 }}
               >
-                <svg
+                <motion.svg
                   className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12 pointer-events-none"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
+                  animate={{ rotate: [0, 12, 0] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 >
                   <path
                     strokeLinecap="round"
@@ -242,21 +428,93 @@ const Hero = () => {
                     strokeWidth="2"
                     d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   ></path>
-                </svg>
+                </motion.svg>
                 Start Your Analysis
-              </button> */}
-              <button
+              </motion.button> */}
+
+              <motion.button
                 type="button"
                 onClick={handleViewDemo}
-                className="w-full sm:w-auto px-7 py-3.5 text-base font-bold text-indigo-600 bg-white/70 backdrop-blur-sm border-2 border-indigo-200/80 rounded-full hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-300"
+                className="w-full sm:w-auto px-7 py-3.5 text-base font-bold text-indigo-600 bg-white/70 backdrop-blur-sm border-2 border-indigo-200/80 rounded-full hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-300 relative overflow-hidden"
+                whileHover={{ 
+                  scale: 1.05,
+                  y: -2,
+                  boxShadow: "0 15px 30px rgba(99, 102, 241, 0.2)"
+                }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1.3 }}
               >
-                View Demo
-              </button>
-            </div>
-          </div>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "0%" }}
+                  transition={{ duration: 0.3 }}
+                />
+                <span className="relative z-10">View Demo</span>
+              </motion.button>
+            </motion.div>
+
+            {/* Added floating stats */}
+            <motion.div
+              className="mt-12 flex justify-center lg:justify-start space-x-8 opacity-60"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isTextInView ? { opacity: 0.6, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 1.5 }}
+            >
+              {[
+                { label: "Real-time", icon: "🔄" },
+                { label: "AI-Powered", icon: "🧠" },
+                { label: "Secure", icon: "🔒" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-center space-x-2"
+                  animate={{ 
+                    y: [0, -5, 0],
+                    opacity: [0.6, 1, 0.6] 
+                  }}
+                  transition={{
+                    duration: 3,
+                    delay: index * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  <span className="text-sm text-gray-600">{item.label}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
         </div>
       </div>
-    </section>
+
+      {/* Bottom wave effect */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-indigo-500/5 to-transparent"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2, duration: 1 }}
+      >
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-16"
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 0%']
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent)',
+            backgroundSize: '200% 100%'
+          }}
+        />
+      </motion.div>
+    </motion.section>
   );
 };
 

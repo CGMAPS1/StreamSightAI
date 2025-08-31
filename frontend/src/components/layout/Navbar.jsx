@@ -130,6 +130,18 @@ const Navbar = () => {
                         Source Code
                         <span className="absolute bottom-1 left-4 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-8"></span>
                     </a>
+
+
+                    <a 
+                        href='/about-team' 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="px-4 py-2 text-gray-600 hover:text-blue-600 font-medium text-sm xl:text-base transition-colors duration-300 relative group rounded-lg hover:bg-blue-50"
+                    >
+                        Team
+                        <span className="absolute bottom-1 left-4 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-8"></span>
+                    </a>
+
                 </nav>
 
                 {/* Right side buttons */}
