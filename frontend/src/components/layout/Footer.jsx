@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 // Using the same consistent logo icon from the Navbar
 const LogoIcon = () => (
@@ -14,10 +15,37 @@ const LogoIcon = () => (
 );
 
 // Custom, consistently styled SVG icons for social media links
-const SocialIcon = ({ href, children }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors duration-300">
-        {children}
-    </a>
+const SocialIcon = ({ href, children, index }) => (
+    <motion.a 
+        href={href} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-gray-500 hover:text-white transition-colors duration-300 relative"
+        initial={{ opacity: 0, scale: 0, rotateY: -90 }}
+        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+        transition={{ 
+            duration: 0.6, 
+            delay: index * 0.1 + 2,
+            ease: "backOut"
+        }}
+        whileHover={{ 
+            scale: 1.2,
+            y: -3,
+            boxShadow: "0 10px 20px rgba(59, 130, 246, 0.3)",
+            transition: { duration: 0.2 }
+        }}
+        whileTap={{ scale: 0.9 }}
+    >
+        {/* Glow effect */}
+        <motion.div
+            className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl opacity-0"
+            whileHover={{ opacity: 1, scale: 1.5 }}
+            transition={{ duration: 0.3 }}
+        />
+        <div className="relative z-10">
+            {children}
+        </div>
+    </motion.a>
 );
 
 const GithubIcon = () => (
@@ -32,93 +60,408 @@ const LinkedInIcon = () => (
     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.769c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.769h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
 );
 
-
 // The main Footer component.
 const Footer = () => {
+  const footerRef = useRef(null);
+  const topSectionRef = useRef(null);
+  const linksRef = useRef(null);
+  const bottomRef = useRef(null);
+
+  const isFooterInView = useInView(footerRef, { once: true, threshold: 0.1 });
+  const isTopInView = useInView(topSectionRef, { once: true, threshold: 0.1 });
+  const areLinksInView = useInView(linksRef, { once: true, threshold: 0.1 });
+  const isBottomInView = useInView(bottomRef, { once: true, threshold: 0.1 });
+
+  // Floating background elements
+  const backgroundElements = Array.from({ length: 20 }, (_, i) => (
+    <motion.div
+      key={i}
+      className="absolute w-1 h-1 bg-blue-400/20 rounded-full"
+      initial={{
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+        y: Math.random() * 600,
+        opacity: 0,
+      }}
+      animate={{
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+        y: Math.random() * 600,
+        opacity: [0.1, 0.8, 0.1],
+        scale: [0.5, 2, 0.5],
+      }}
+      transition={{
+        duration: Math.random() * 25 + 20,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: Math.random() * 10
+      }}
+    />
+  ));
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    }
+  };
+
   return (
-    <footer className="relative bg-gray-900 pt-20 pb-8 px-6 lg:px-10 tracking-wide overflow-hidden">
-        {/* A futuristic, animated grid background */}
-        <div className="absolute inset-0 -z-10">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-            <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_1000px_at_50%_0px,#1e3a8a44,transparent)]"></div>
-        </div>
+    <motion.footer 
+      ref={footerRef}
+      className="relative bg-gray-900 pt-20 pb-8 px-6 lg:px-10 tracking-wide overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      {/* Enhanced animated grid background */}
+      <motion.div 
+        className="absolute inset-0 -z-10"
+        animate={{
+          backgroundPosition: ['0% 0%', '100% 100%', '0% 0%']
+        }}
+        transition={{
+          duration: 50,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      >
+        <motion.div 
+          className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]"
+          animate={{
+            backgroundPosition: ['0px 0px', '14px 24px', '0px 0px']
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        <motion.div 
+          className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_1000px_at_50%_0px,#1e3a8a44,transparent)]"
+          animate={{
+            background: [
+              "radial-gradient(circle_1000px_at_30%_0px,#1e3a8a44,transparent)",
+              "radial-gradient(circle_1000px_at_70%_0px,#1e3a8a44,transparent)",
+              "radial-gradient(circle_1000px_at_30%_0px,#1e3a8a44,transparent)"
+            ]
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
 
-        <div className="max-w-screen-xl mx-auto">
-            {/* Top section with tagline and newsletter signup */}
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 pb-10 border-b border-gray-700/80">
-                <div className="text-center lg:text-left">
-                    <h3 className="text-3xl font-bold text-white">Stay Ahead of the Curve</h3>
-                    <p className="text-gray-400 mt-2">Get the latest on visual AI, product updates, and case studies.</p>
-                </div>
-                <form className="w-full max-w-md">
-                    <div className="flex items-center border border-gray-600/80 rounded-full p-1 bg-gray-800/50 backdrop-blur-sm focus-within:border-blue-500 transition-all duration-300">
-                        <input type="email" placeholder="Enter your email" className="w-full bg-transparent p-2 pl-4 text-white placeholder-gray-500 focus:outline-none" />
-                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full px-5 py-2 transition-colors duration-300">
-                            Subscribe
-                        </button>
-                    </div>
-                </form>
-            </div>
+      {/* Floating background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {backgroundElements}
+      </div>
 
-            {/* Main grid with links */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-10">
-                {/* Logo and tagline column */}
-                <div className="col-span-2 md:col-span-4 lg:col-span-1">
-                    <a href="/" className="flex items-center mb-4">
-                        <LogoIcon />
-                        <span className="text-2xl font-bold text-white tracking-tighter">StreamSight AI</span>
-                    </a>
-                    <p className="text-gray-400 text-sm max-w-xs">See beyond the pixels. Understand the action.</p>
-                </div>
+      {/* Additional glowing orbs */}
+      <motion.div
+        className="absolute top-20 left-10 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"
+        animate={{
+          x: [0, 100, 0],
+          y: [0, -40, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl"
+        animate={{
+          x: [0, -80, 0],
+          y: [0, 50, 0],
+          scale: [1, 0.8, 1],
+        }}
+        transition={{
+          duration: 22,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
 
-                {/* Link columns */}
-                <div>
-                    <h4 className="text-base font-semibold mb-4 text-white">Platform</h4>
-                    <ul className="space-y-3">
-                        <li><a href="/features" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Features</a></li>
-                        <li><a href="/demo" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Live Demo</a></li>
-                        <li><a href="/pricing" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Pricing</a></li>
-                        <li><a href="/status" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">System Status</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 className="text-base font-semibold mb-4 text-white">Resources</h4>
-                    <ul className="space-y-3">
-                        <li><a href="/docs" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Documentation</a></li>
-                        <li><a href="/api" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">API Reference</a></li>
-                        <li><a href="/case-studies" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Case Studies</a></li>
-                        <li><a href="/blog" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Blog</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 className="text-base font-semibold mb-4 text-white">Developers</h4>
-                    <ul className="space-y-3">
-                        <li><a href="https://github.com/MantraHackathon" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">GitHub</a></li>
-                        <li><a href="/community" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Community Forum</a></li>
-                        <li><a href="/hackathon" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Hackathon Project</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 className="text-base font-semibold mb-4 text-white">Company</h4>
-                    <ul className="space-y-3">
-                        <li><a href="/about" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">About Us</a></li>
-                        <li><a href="/contact" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Contact</a></li>
-                        <li><a href="/careers" className="text-slate-400 hover:text-white text-sm transition-colors duration-300">Careers</a></li>
-                    </ul>
-                </div>
-            </div>
+      <div className="max-w-screen-xl mx-auto relative z-10">
+        {/* Enhanced top section with tagline and newsletter signup */}
+        <motion.div 
+          ref={topSectionRef}
+          className="flex flex-col lg:flex-row items-center justify-between gap-8 pb-10 border-b border-gray-700/80"
+          initial={{ opacity: 0, y: 50 }}
+          animate={isTopInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <motion.div 
+            className="text-center lg:text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={isTopInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <motion.h3 
+              className="text-3xl font-bold text-white relative"
+              whileHover={{ scale: 1.02 }}
+            >
+              <motion.span
+                className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                style={{
+                  backgroundSize: '200% 200%'
+                }}
+              >
+                Stay Ahead of the Curve
+              </motion.span>
+            </motion.h3>
+            <motion.p 
+              className="text-gray-400 mt-2"
+              initial={{ opacity: 0 }}
+              animate={isTopInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Get the latest on visual AI, product updates, and case studies.
+            </motion.p>
+          </motion.div>
 
-            {/* Bottom section with copyright and social links */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 mt-8 border-t border-gray-700/80">
-                <p className="text-slate-400 text-sm">© {new Date().getFullYear()} StreamSight AI. All rights reserved.</p>
-                <div className="flex space-x-6">
-                    <SocialIcon href="https://github.com/MantraHackathon"><GithubIcon /></SocialIcon>
-                    <SocialIcon href="#"><TwitterIcon /></SocialIcon>
-                    <SocialIcon href="#"><LinkedInIcon /></SocialIcon>
-                </div>
-            </div>
-        </div>
-    </footer>
+          <motion.form 
+            className="w-full max-w-md"
+            initial={{ opacity: 0, x: 50 }}
+            animate={isTopInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <motion.div 
+              className="flex items-center border border-gray-600/80 rounded-full p-1 bg-gray-800/50 backdrop-blur-sm focus-within:border-blue-500 transition-all duration-300 relative overflow-hidden"
+              whileHover={{ 
+                scale: 1.02,
+                boxShadow: "0 10px 30px rgba(59, 130, 246, 0.1)" 
+              }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0"
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="w-full bg-transparent p-2 pl-4 text-white placeholder-gray-500 focus:outline-none relative z-10" 
+              />
+              <motion.button 
+                type="submit" 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full px-5 py-2 transition-colors duration-300 relative z-10"
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 5px 15px rgba(59, 130, 246, 0.4)"
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Subscribe
+              </motion.button>
+            </motion.div>
+          </motion.form>
+        </motion.div>
+
+        {/* Enhanced main grid with links */}
+        <motion.div 
+          ref={linksRef}
+          className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-10"
+          variants={containerVariants}
+          initial="hidden"
+          animate={areLinksInView ? "visible" : "hidden"}
+        >
+          {/* Logo and tagline column */}
+          <motion.div 
+            className="col-span-2 md:col-span-4 lg:col-span-1"
+            variants={itemVariants}
+          >
+            <motion.a 
+              href="/" 
+              className="flex items-center mb-4"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              >
+                <LogoIcon />
+              </motion.div>
+              <span className="text-2xl font-bold text-white tracking-tighter">StreamSight AI</span>
+            </motion.a>
+            <motion.p 
+              className="text-gray-400 text-sm max-w-xs"
+              initial={{ opacity: 0 }}
+              animate={areLinksInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              See beyond the pixels. Understand the action.
+            </motion.p>
+          </motion.div>
+
+          {/* Link columns with staggered animations */}
+          {[
+            {
+              title: "Platform",
+              links: [
+                { name: "Features", href: "/features" },
+                { name: "Live Demo", href: "/demo" },
+                { name: "Pricing", href: "/pricing" },
+                { name: "System Status", href: "/status" }
+              ]
+            },
+            {
+              title: "Resources", 
+              links: [
+                { name: "Documentation", href: "/docs" },
+                { name: "API Reference", href: "/api" },
+                { name: "Case Studies", href: "/case-studies" },
+                { name: "Blog", href: "/blog" }
+              ]
+            },
+            {
+              title: "Developers",
+              links: [
+                { name: "GitHub", href: "https://github.com/MantraHackathon" },
+                { name: "Community Forum", href: "/community" },
+                { name: "Hackathon Project", href: "/hackathon" }
+              ]
+            },
+            {
+              title: "Company",
+              links: [
+                { name: "About Us", href: "/about" },
+                { name: "Contact", href: "/contact" },
+                { name: "Careers", href: "/careers" }
+              ]
+            }
+          ].map((column, columnIndex) => (
+            <motion.div 
+              key={columnIndex}
+              variants={itemVariants}
+              custom={columnIndex}
+            >
+              <motion.h4 
+                className="text-base font-semibold mb-4 text-white"
+                whileHover={{ x: 5 }}
+                transition={{ duration: 0.2 }}
+              >
+                {column.title}
+              </motion.h4>
+              <ul className="space-y-3">
+                {column.links.map((link, linkIndex) => (
+                  <motion.li 
+                    key={linkIndex}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={areLinksInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: columnIndex * 0.1 + linkIndex * 0.05 + 0.8 
+                    }}
+                  >
+                    <motion.a 
+                      href={link.href}
+                      className="text-slate-400 hover:text-white text-sm transition-colors duration-300 relative"
+                      whileHover={{ 
+                        x: 8,
+                        color: "#ffffff"
+                      }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <motion.span
+                        className="absolute -left-2 top-1/2 w-1 h-1 bg-blue-400 rounded-full opacity-0"
+                        whileHover={{ opacity: 1, x: -2 }}
+                        style={{ transform: "translateY(-50%)" }}
+                      />
+                      {link.name}
+                    </motion.a>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Enhanced bottom section with copyright and social links */}
+        <motion.div 
+          ref={bottomRef}
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 mt-8 border-t border-gray-700/80"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isBottomInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <motion.p 
+            className="text-slate-400 text-sm"
+            initial={{ opacity: 0, x: -30 }}
+            animate={isBottomInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            © {new Date().getFullYear()} StreamSight AI. All rights reserved.
+          </motion.p>
+          
+          <motion.div 
+            className="flex space-x-6"
+            initial={{ opacity: 0, x: 30 }}
+            animate={isBottomInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <SocialIcon href="https://github.com/MantraHackathon" index={0}>
+              <GithubIcon />
+            </SocialIcon>
+            <SocialIcon href="#" index={1}>
+              <TwitterIcon />
+            </SocialIcon>
+            <SocialIcon href="#" index={2}>
+              <LinkedInIcon />
+            </SocialIcon>
+          </motion.div>
+        </motion.div>
+
+        {/* Animated wave line at bottom */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"
+          animate={{
+            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+            opacity: [0.3, 0.8, 0.3]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          style={{
+            backgroundSize: '200% 200%'
+          }}
+        />
+      </div>
+    </motion.footer>
   );
 };
 
