@@ -44,7 +44,7 @@ const teamMembers = [
     {
         id: 3,
         name: "Laaksh Parikh",
-        role: "Frontend Developer",
+        role: "Machine Learning",
         linkedin: "https://linkedin.com/in/laakshparikh",
         email: "laaksh@streamsight.ai",
         github: "https://github.com/laakshparikh",
@@ -62,7 +62,7 @@ const teamMembers = [
     {
         id: 5,
         name: "Hemant Pathak",
-        role: "DevOps Engineer",
+        role: "Machine Learning",
         linkedin: "https://linkedin.com/in/hemantpathak",
         email: "hemant@streamsight.ai",
         github: "https://github.com/hemantpathak",
