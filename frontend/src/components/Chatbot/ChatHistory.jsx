@@ -1,4 +1,3 @@
-// 3. Enhanced ChatHistory.jsx with timestamps and better formatting
 import React, { useEffect, useRef } from 'react';
 import { BotIcon, UserIcon, ErrorIcon } from './Icons';
 
@@ -46,26 +45,26 @@ const ChatHistory = ({ messages, isLoading }) => {
     return (
         <div 
             ref={chatContainerRef}
-            className="flex-1 p-6 space-y-6 overflow-y-auto"
+            className="flex-1 p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-6 overflow-y-auto scrollbar-thin"
         >
             {messages.map((msg, index) => (
                 <div 
                     key={index} 
-                    className={`group flex items-start gap-3.5 ${msg.isUser ? 'justify-end' : ''}`}
+                    className={`group flex items-start gap-2 sm:gap-3 lg:gap-3.5 ${msg.isUser ? 'justify-end' : ''}`}
                 >
                     {!msg.isUser && (
                         <div className="flex-shrink-0">
                             {msg.isError ? <ErrorIcon /> : <BotIcon />}
                         </div>
                     )}
-                    <div className={`max-w-xl p-4 rounded-2xl shadow-md relative ${
+                    <div className={`max-w-[85%] sm:max-w-[75%] lg:max-w-xl p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-md relative ${
                         msg.isUser 
                             ? 'bg-blue-600 text-white rounded-br-none' 
                             : msg.isError
                                 ? 'bg-red-100 text-red-800 border border-red-200 rounded-bl-none'
                                 : 'bg-gray-200/60 text-gray-800 rounded-bl-none'
                     }`}>
-                        <p className="whitespace-pre-wrap text-sm leading-relaxed mb-2">
+                        <p className="whitespace-pre-wrap text-xs sm:text-sm leading-relaxed mb-1 sm:mb-2">
                             {msg.text}
                         </p>
                         <div className="flex items-center justify-between">
@@ -81,13 +80,17 @@ const ChatHistory = ({ messages, isLoading }) => {
                             )}
                         </div>
                     </div>
-                    {msg.isUser && <UserIcon />}
+                    {msg.isUser && (
+                        <div className="flex-shrink-0">
+                            <UserIcon />
+                        </div>
+                    )}
                 </div>
             ))}
             {isLoading && (
-                <div className="flex items-start gap-3.5">
+                <div className="flex items-start gap-2 sm:gap-3 lg:gap-3.5">
                     <BotIcon />
-                    <div className="p-4 rounded-2xl bg-gray-200/60 rounded-bl-none">
+                    <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gray-200/60 rounded-bl-none">
                         <div className="flex items-center space-x-1.5">
                             <span className="w-2 h-2 bg-gray-500 rounded-full animate-pulse"></span>
                             <span className="w-2 h-2 bg-gray-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></span>

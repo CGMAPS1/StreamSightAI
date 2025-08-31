@@ -1,4 +1,3 @@
-// 1. Enhanced Chat.jsx with better state management and error handling
 import React, { useState, useEffect, useRef } from 'react';
 import AnimatedBackground from '../../components/Chatbot/AnimatedBackground';
 import InputPanel from '../../components/Chatbot/InputPanel';
@@ -193,57 +192,64 @@ const Chat = () => {
     };
 
     return (
-        <main className="chat-container relative w-full bg-gray-100 overflow-hidden font-sans pt-12 pb-6 p-12">
+        <main className="chat-container relative w-full min-h-screen bg-gray-100 overflow-hidden font-sans">
             <AnimatedBackground />
-            <div className="relative container mx-auto px-4 lg:px-6 h-[calc(100vh-120px)] overflow-hidden">
-                {/* Status Bar */}
-                <div className="mb-4 flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${isServerOnline ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                        <span className="text-sm text-gray-600">
-                            {isServerOnline ? 'Server Online' : 'Server Offline'}
-                        </span>
-                        <span className="text-xs text-gray-400 ml-4">
-                            Session: {getSessionId().slice(-8)}
-                        </span>
-                    </div>
-                    <div className="flex gap-2">
-                        {messages.length > 1 && (
+            <div className="relative w-full h-screen flex flex-col">
+                {/* Status Bar - Responsive */}
+                <div className="flex-shrink-0 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <div className={`w-2 h-2 rounded-full ${isServerOnline ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                            <span className="text-xs sm:text-sm text-gray-600">
+                                {isServerOnline ? 'Server Online' : 'Server Offline'}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                                Session: {getSessionId().slice(-8)}
+                            </span>
+                        </div>
+                        <div className="flex gap-2">
+                            {messages.length > 1 && (
+                                <button
+                                    onClick={exportChatHistory}
+                                    className="px-2 sm:px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
+                                >
+                                    Export
+                                </button>
+                            )}
                             <button
-                                onClick={exportChatHistory}
-                                className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
+                                onClick={resetSession}
+                                className="px-2 sm:px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
                             >
-                                Export Chat
+                                New Session
                             </button>
-                        )}
-                        <button
-                            onClick={resetSession}
-                            className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
-                        >
-                            New Session
-                        </button>
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-6 h-full">
-                    <div className="lg:col-span-5 h-full min-h-0">
-                        <InputPanel
-                            onVideoUpload={handleVideoUpload}
-                            isProcessing={isProcessing}
-                            analysisResults={analysisResults}
-                            onReset={resetSession}
-                            currentFile={currentFile}
-                        />
-                    </div>
-                    <div className="lg:col-span-7 h-full min-h-0">
-                        <ChatPanel
-                            isVideoUploaded={isVideoUploaded}
-                            messages={messages}
-                            isBotLoading={isBotLoading}
-                            onSendMessage={handleSendMessage}
-                            sessionId={getSessionId()}
-                            isServerOnline={isServerOnline}
-                        />
+                {/* Main Content - Responsive Grid */}
+                <div className="flex-1 px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6 min-h-0">
+                    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-6 h-full">
+                        {/* Input Panel - Full width on mobile, 5 cols on desktop */}
+                        <div className="lg:col-span-5 h-full min-h-0 order-2 lg:order-1">
+                            <InputPanel
+                                onVideoUpload={handleVideoUpload}
+                                isProcessing={isProcessing}
+                                analysisResults={analysisResults}
+                                onReset={resetSession}
+                                currentFile={currentFile}
+                            />
+                        </div>
+                        {/* Chat Panel - Full width on mobile, 7 cols on desktop */}
+                        <div className="lg:col-span-7 h-full min-h-0 order-1 lg:order-2">
+                            <ChatPanel
+                                isVideoUploaded={isVideoUploaded}
+                                messages={messages}
+                                isBotLoading={isBotLoading}
+                                onSendMessage={handleSendMessage}
+                                sessionId={getSessionId()}
+                                isServerOnline={isServerOnline}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
