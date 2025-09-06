@@ -95,7 +95,7 @@ const Navbar = () => {
         { name: 'Features', href: '/features', icon: '🚀' },
         { name: 'Demo', href: '/demo', icon: '🎬' },
         { name: 'Source Code', href: 'https://github.com/kunalverma2512/StreamSightAI', icon: '💻', external: true },
-        { name: 'Team', href: '/about-team', icon: '👥', external: true }
+        // { name: 'Team', href: '/about-team', icon: '👥', external: true }
     ];
 
     const containerVariants = {
